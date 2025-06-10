@@ -1,19 +1,15 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
-
-type Params = {
-  id: string;
-};
+import { NextRequest, NextResponse } from 'next/server';
 
 // GET /api/transactions/[id] - Get a single transaction
 export async function GET(
-  request: Request,
-  { params }: { params: Params }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     const transaction = await prisma.transaction.findUnique({
       where: {
-        id: params.id,
+        id: context.params.id,
       },
     });
 
@@ -33,8 +29,8 @@ export async function GET(
 
 // PUT /api/transactions/[id] - Update a transaction
 export async function PUT(
-  request: Request,
-  { params }: { params: Params }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     const body = await request.json();
@@ -43,7 +39,7 @@ export async function PUT(
     // Check if transaction exists
     const existingTransaction = await prisma.transaction.findUnique({
       where: {
-        id: params.id,
+        id: context.params.id,
       },
     });
 
@@ -69,7 +65,7 @@ export async function PUT(
 
     const updatedTransaction = await prisma.transaction.update({
       where: {
-        id: params.id,
+        id: context.params.id,
       },
       data: {
         amount: parseFloat(amount.toString()),
@@ -92,14 +88,14 @@ export async function PUT(
 
 // DELETE /api/transactions/[id] - Delete a transaction
 export async function DELETE(
-  request: Request,
-  { params }: { params: Params }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     // Check if transaction exists
     const existingTransaction = await prisma.transaction.findUnique({
       where: {
-        id: params.id,
+        id: context.params.id,
       },
     });
 
@@ -109,7 +105,7 @@ export async function DELETE(
 
     await prisma.transaction.delete({
       where: {
-        id: params.id,
+        id: context.params.id,
       },
     });
 

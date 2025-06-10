@@ -34,6 +34,10 @@ import { useCurrency } from "@/lib/currency-context";
 import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar, Pie, Cell, Legend } from "recharts";
 import { format } from "date-fns";
 import { Progress } from "@/components/ui/progress";
+import { processTransactionsForChart } from "@/lib/utils";
+
+// Define color palette for charts
+const COLORS = ['#4ade80', '#f87171', '#60a5fa', '#fbbf24', '#a78bfa', '#f472b6', '#34d399', '#fb923c'];
 
 export default function Home() {
   return <HomeClient />;
@@ -53,6 +57,30 @@ function HomeClient() {
       return transactionDate >= dateRange.from && transactionDate <= dateRange.to;
     });
   }, [transactions, dateRange]);
+  
+  // Process data for charts
+  const monthlyData = useMemo(() => {
+    return processTransactionsForChart(filteredTransactions);
+  }, [filteredTransactions]);
+  
+  // Create category data for pie chart
+  const categoryData = useMemo(() => {
+    const expensesByCategory = filteredTransactions
+      .filter(t => t.type === "expense")
+      .reduce((acc, transaction) => {
+        const { category, amount } = transaction;
+        if (!acc[category]) {
+          acc[category] = 0;
+        }
+        acc[category] += amount;
+        return acc;
+      }, {} as Record<string, number>);
+    
+    return Object.entries(expensesByCategory).map(([name, value]) => ({
+      name,
+      value
+    }));
+  }, [filteredTransactions]);
   
   // Calculate total balance, income, and expenses
   const financialSummary = useMemo(() => {
