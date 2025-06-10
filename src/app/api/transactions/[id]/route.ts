@@ -1,14 +1,15 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
+type Params = {
+  id: string;
+};
 
 // GET /api/transactions/[id] - Get a single transaction
-export async function GET(request: Request, { params }: Params) {
+export async function GET(
+  request: Request,
+  { params }: { params: Params }
+) {
   try {
     const transaction = await prisma.transaction.findUnique({
       where: {
@@ -31,7 +32,10 @@ export async function GET(request: Request, { params }: Params) {
 }
 
 // PUT /api/transactions/[id] - Update a transaction
-export async function PUT(request: Request, { params }: Params) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Params }
+) {
   try {
     const body = await request.json();
     const { amount, type, description, date, category } = body;
@@ -87,7 +91,10 @@ export async function PUT(request: Request, { params }: Params) {
 }
 
 // DELETE /api/transactions/[id] - Delete a transaction
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Params }
+) {
   try {
     // Check if transaction exists
     const existingTransaction = await prisma.transaction.findUnique({
