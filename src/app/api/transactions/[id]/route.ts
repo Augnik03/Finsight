@@ -1,15 +1,17 @@
 import { prisma } from '@/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // GET /api/transactions/[id] - Get a single transaction
 export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+  
   try {
     const transaction = await prisma.transaction.findUnique({
       where: {
-        id: context.params.id,
+        id: id,
       },
     });
 
@@ -29,9 +31,11 @@ export async function GET(
 
 // PUT /api/transactions/[id] - Update a transaction
 export async function PUT(
-  request: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+  
   try {
     const body = await request.json();
     const { amount, type, description, date, category } = body;
@@ -39,7 +43,7 @@ export async function PUT(
     // Check if transaction exists
     const existingTransaction = await prisma.transaction.findUnique({
       where: {
-        id: context.params.id,
+        id: id,
       },
     });
 
@@ -65,7 +69,7 @@ export async function PUT(
 
     const updatedTransaction = await prisma.transaction.update({
       where: {
-        id: context.params.id,
+        id: id,
       },
       data: {
         amount: parseFloat(amount.toString()),
@@ -88,14 +92,16 @@ export async function PUT(
 
 // DELETE /api/transactions/[id] - Delete a transaction
 export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+  
   try {
     // Check if transaction exists
     const existingTransaction = await prisma.transaction.findUnique({
       where: {
-        id: context.params.id,
+        id: id,
       },
     });
 
@@ -105,7 +111,7 @@ export async function DELETE(
 
     await prisma.transaction.delete({
       where: {
-        id: context.params.id,
+        id: id,
       },
     });
 
