@@ -31,7 +31,7 @@ import {
   Clock
 } from "lucide-react";
 import { useCurrency } from "@/lib/currency-context";
-import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar, Pie, Cell, Legend } from "@/components/ui/bar-chart";
+import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar, Pie, Cell, Legend } from "recharts";
 import { format } from "date-fns";
 import { Progress } from "@/components/ui/progress";
 
