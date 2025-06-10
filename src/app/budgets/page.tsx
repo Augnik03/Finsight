@@ -276,7 +276,9 @@ function BudgetsClient() {
                 ) : (
                   <Select
                     value={selectedCategory}
-                    onValueChange={setSelectedCategory}
+                    onValueChange={(value: string) => {
+                      setSelectedCategory(value as Category);
+                    }}
                   >
                     <SelectTrigger id="category">
                       <SelectValue placeholder="Select a category" />

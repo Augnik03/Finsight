@@ -6,8 +6,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { notFound } from "next/navigation";
 import { useTransactions } from "@/lib/transaction-context";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Dummy data for now - this will be replaced with actual data fetching
@@ -35,21 +35,23 @@ const transactions = [
   },
 ];
 
-interface EditTransactionPageProps {
-  params: {
-    id: string;
-  };
+interface TransactionParams {
+  id: string;
 }
 
-export default function EditTransactionPage({ params }: EditTransactionPageProps) {
-  return <EditTransactionClient params={params} />;
+// Since this is a client component, we can use useParams instead
+export default function EditTransactionPage() {
+  return <EditTransactionClient />;
 }
 
-function EditTransactionClient({ params }: EditTransactionPageProps) {
+function EditTransactionClient() {
   const { getTransactionById, updateTransaction, isLoading } = useTransactions();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const transaction = getTransactionById(params.id);
+  const params = useParams();
+  const id = params?.id as string;
+  
+  const transaction = getTransactionById(id);
 
   // If the transaction doesn't exist, return a 404
   if (!transaction) {
@@ -59,7 +61,7 @@ function EditTransactionClient({ params }: EditTransactionPageProps) {
   const handleSubmit = async (data: any) => {
     try {
       setError(null);
-      await updateTransaction(params.id, data);
+      await updateTransaction(id, data);
       router.push("/transactions");
     } catch (err) {
       console.error("Failed to update transaction:", err);
