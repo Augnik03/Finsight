@@ -223,7 +223,7 @@ function HomeClient() {
         <div className="flex flex-col sm:flex-row gap-2 md:gap-4">
           <DateRangePicker 
             value={dateRange}
-            onChange={setDateRange}
+            onChange={(value) => setDateRange(value ? { from: value.from as Date, to: value.to as Date } : undefined)}
           />
           <div className="flex gap-2">
             <Button asChild variant="outline" size="sm" className="h-10">

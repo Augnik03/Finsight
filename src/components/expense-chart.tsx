@@ -38,7 +38,10 @@ export function ExpenseChart({ transactions: propTransactions }: ExpenseChartPro
         <XAxis dataKey="month" />
         <YAxis />
         <Tooltip 
-          formatter={(value) => [`$${value.toFixed(2)}`, undefined]}
+          formatter={(value) => {
+            const formattedValue = typeof value === 'number' ? `$${value.toFixed(2)}` : `$${value}`;
+            return [formattedValue, undefined];
+          }}
           labelFormatter={(label) => `Month: ${label}`}
         />
         <Legend />
